@@ -13,10 +13,12 @@ class Node:
 		return ''
 
 	def __str__(self):
-		if self.val:
-			return ''
+		print("\nval = %s"%self.val)
+		print("     children: ", end="")
 		for c in self.children:
-			print(c)
+			print(c, end="")
+		print("")
+		return ''
 
 	def insert(self, s):
 		if len(s)<1:
@@ -31,17 +33,28 @@ class Node:
 			p.insert(s[1:])
 
 	def search(self, s):
-	#Words must end in $
+		return self.searchHelper(s+'$')
+
+	def searchHelper(self, s):
 		if s=='$':
 			return True
-
 		try:
 			if s[0] in self.children:
-				return self.children[s[0]].search(s[1:])
+				return self.children[s[0]].searchHelper(s[1:])
 		except IndexError:
 			return False
+		return False
+
+	"""boring search
+	def search(self, s):
+		if '$':
+			return True
+		elif s[0] in self.children:
+			return self.children[s[0]].searchHelper(s[1:])
 
 		return False
+
+	"""
 
 	def searchFrag(self, s):
 		if s=='':
@@ -101,18 +114,6 @@ def block_width(block):
 		return len(block)
 
 def stack_str_blocks(blocks):
-	"""Takes a list of multiline strings, and stacks them horizontally.
-
-	For example, given 'aaa\naaa' and 'bbbb\nbbbb', it returns
-	'aaa bbbb\naaa bbbb'.  As in:
-
-	'aaa  +  'bbbb   =  'aaa bbbb
-	 aaa'     bbbb'      aaa bbbb'
-
-	Each block must be rectangular (all lines are the same length), but blocks
-	can be different sizes.
-	"""
-
 	builder = []
 	block_lens = [block_width(bl) for bl in blocks]
 	split_blocks = [bl.split('\n') for bl in blocks]
@@ -142,31 +143,41 @@ def basics():
 	root.insert('dognip')
 	print(root)
 	print(root.display())
-	print(root.search('junk$'))
-	print(root.search('dogs$'))
+	print(root.search('junk'))
+	print(root.search('dogs'))
 	print(root.searchFrag('do'))
 	print(root.searchFrag('dox'))
 
 def humanMove(root, s):
-	c=input("Human Turn. Enter a charater: ")
-	print(c)
-	s+=c.lower()[0]
-	if root.search(s+'$'):
+	c=input("Human Turn. Enter a charater: ").lower()[0]
+	#print(root)
+	s+=c
+	if '$' in root.children and len(s)>3:
 		print("Human loses. %s is a word"%s)
-	elif not root.searchFrag(s):
+		exit()
+	elif not c in root.children:
 		print("Human loses. No words begin in %s"%s)
+		exit()
 	else:
-		print(s)
+		print("word: %s \n"%s)
 		root=root.children[s[len(s)-1]]
 		return root, s
 
 def computerMove(root, s):
-	options = root.children.keys()
+	options = list(root.children.keys())
+	#print(options)
 	choice = options[0]
 	s += choice
 	print("Computer chooses character %s"%choice)
-	print(s)
+	#print(s)
 	root = root.children[choice]
+	#print(root)
+
+	if '$' in root.children and len(s)>3:
+		print("Computer loses!", s, " is a word.")
+		exit()
+
+	print("word: %s \n"%s)
 	return root, s
 
 def main():
@@ -174,6 +185,7 @@ def main():
 	root=Node('*')
 	for line in f:
 		root.insert(line.lower().strip())
+
 	f.close()
 	s=''
 
