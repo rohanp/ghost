@@ -1,4 +1,4 @@
 ghost
 =====
 
-an enjoyable word game
+an enjoyable word game, with AI
