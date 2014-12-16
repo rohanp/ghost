@@ -15,7 +15,7 @@ from itertools import zip_longest
 import pickle
 import sys
 from time import sleep
-
+from re import match
 sys.setrecursionlimit(10000)
 N=2
 
@@ -189,9 +189,10 @@ def computerMove(root, s):
 	print("word: %s \n"%s)
 	return root, s
 
+
 def humanMove(root, s):
-	c=input("Human Turn. Enter a charater:").lower()[0]
-	#print(root)
+	c=input("Human Turn. Enter a charater: ").lower()[0]
+
 	while c == '?':
 		start=clock()
 		validMoves = ', '.join(root.children.keys())
@@ -221,13 +222,16 @@ def humanMove(root, s):
 		c=input("Human Turn. Enter a charater: ").lower()[0]
 	s+=c
 
-	choice = root.children[c]
+	try:
+		choice = root.children[c]
+	except KeyError:
+		print("Human loses. No words begin in %s"%s)
+		exit()
+
 	if '$' in choice.children.keys() and len(s)>3:
 		print("Human loses. %s is a word"%s)
 		exit()
-	elif not c in root.children:
-		print("Human loses. No words begin in %s"%s)
-		exit()
+
 	else:
 		print("word: %s \n"%s)
 		root=root.children[s[len(s)-1]]
