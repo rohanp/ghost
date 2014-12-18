@@ -48,43 +48,6 @@ class Node:
 			self.children[s[0]]=p
 			p.insert(s[1:])
 
-	"""def search(self, s):
-		return self.searchHelper(s+'$')
-
-	def searchHelper(self, s):
-		if s=='$':
-			return True
-		try:
-			if s[0] in self.children:
-				return self.children[s[0]].searchHelper(s[1:])
-		except IndexError:
-			return False
-		return False
-
-	def searchFrag(self, s):
-		if s=='':
-			return True
-
-		if s[0] in self.children:
-			return self.children[s[0]].searchFrag(s[1:])
-
-		return False
-
-	def getFrag(self, s):
-		if s[0] in self.children:
-			if s[1:] == '':
-				return self
-			else:
-				return self.children[s[0]].searchFrag(s[1:])
-		return null"""
-
-	def mustSpellWord(self):
-		if 1==len(self.children.keys()):
-			lastLetter = list(self.children.values())[0]
-			if 1==len(lastLetter.children) and '$'==list(lastLetter.children.keys())[0]:
-				return True
-		return False
-
 	def display(self):
 		if not self.children:
 			return self.val
@@ -141,19 +104,6 @@ def stack_str_blocks(blocks):
 		builder.append('\n')
 
 	return ''.join(builder[:-1])
-
-def basics():
-	root=Node('*')
-	root.insert('random')
-	root.insert('royal')
-	root.insert('rower')
-	root.insert('rowing')
-	root.insert("runner")
-	root.insert('running')
-	root=root.children['r']
-	print(root.display())
-	losers = [loser(o,2) for o in root.children.values()]
-	print(losers)
 
 
 def loser(root, player):
