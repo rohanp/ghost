@@ -48,6 +48,13 @@ class Node:
 			self.children[s[0]]=p
 			p.insert(s[1:])
 
+	def mustSpellWord(self):
+		if 1==len(self.children.keys()):
+			lastLetter = list(self.children.values())[0]
+			if 1==len(lastLetter.children) and '$'==list(lastLetter.children.keys())[0]:
+				return True
+		return False
+
 	def display(self):
 		if not self.children:
 			return self.val
